@@ -1,11 +1,11 @@
 const baseUrl = `${process.env.REACT_APP_SERVERIP}/operations`;
 let token = null;
 
-const setToken = (newToken) => {
+export const setTokenOperations = (newToken) => {
   token = newToken;
 };
 
-const getOperations = async (categoryId = undefined) => {
+export const getOperations = async (categoryId = undefined) => {
   if (categoryId) {
     const response = await fetch(`${baseUrl}?categoryId=${categoryId}`, {
       method: "GET",
@@ -20,7 +20,7 @@ const getOperations = async (categoryId = undefined) => {
   return await response.json();
 };
 
-const getOperation = async ({ operationId }) => {
+export const getOperation = async ({ operationId }) => {
   const response = await fetch(baseUrl, {
     method: "GET",
     headers: { "x-token": token },
@@ -28,7 +28,7 @@ const getOperation = async ({ operationId }) => {
   return response.json();
 };
 
-const createOperation = async (operationData) => {
+export const createOperation = async (operationData) => {
   const response = await fetch(baseUrl, {
     method: "POST",
     body: JSON.stringify(operationData),
@@ -38,7 +38,7 @@ const createOperation = async (operationData) => {
   return response;
 };
 
-const updateOperation = async (updatedOperationData) => {
+export const updateOperation = async (updatedOperationData) => {
   console.log("datos de update en servicio", updatedOperationData);
   const response = await fetch(`${baseUrl}/${updatedOperationData.id}`, {
     method: "PUT",
@@ -48,19 +48,10 @@ const updateOperation = async (updatedOperationData) => {
   return response;
 };
 
-const deleteOperation = async (id) => {
+export const deleteOperation = async (id) => {
   const response = await fetch(`${baseUrl}/${id}`, {
     method: "DELETE",
     headers: { "x-token": token },
   });
   return response;
-};
-
-module.exports = {
-  getOperations,
-  getOperation,
-  createOperation,
-  updateOperation,
-  deleteOperation,
-  setTokenOperations: setToken,
 };
