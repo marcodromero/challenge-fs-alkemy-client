@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAuthStore } from "../../store/authStore";
-import serviceOperations from "../../services/operations";
-import serviceBalance from "../../services/balance";
+import { setToken as serviceOperationsSetToken } from "../../services/operations";
+import { setToken as serviceBalanceSetToken } from "../../services/balance";
 const baseUrl = `${process.env.REACT_APP_SERVERIP}`;
 
 export const ButtonGoogleSignin = () => {
@@ -15,8 +15,8 @@ export const ButtonGoogleSignin = () => {
         picture: userLocal.picture,
         email: userLocal.email,
       });
-      serviceOperations.setToken(userLocal.token);
-      serviceBalance.setToken(userLocal.token);
+      serviceOperationsSetToken(userLocal.token);
+      serviceBalanceSetToken(userLocal.token);
       setIsAuthenticated(true);
     }
   };
@@ -37,9 +37,8 @@ export const ButtonGoogleSignin = () => {
           picture: resp.user.picture,
           email: resp.user.email,
         });
-        console.log(resp);
-        serviceOperations.setToken(resp.token);
-        serviceBalance.setToken(resp.token);
+        serviceOperationsSetToken(resp.token);
+        serviceBalanceSetToken(resp.token);
         localStorage.setItem(
           "user",
           JSON.stringify({
