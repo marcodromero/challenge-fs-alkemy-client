@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import { formatDate } from "../utils/formatDate";
-import operationsService from "../services/operations";
+import {
+  getOperations,
+  createOperation,
+  updateOperation,
+  deleteOperation,
+} from "../services/operations";
 
 export const useOperationStore = create((set, get) => ({
   operation: null,
@@ -20,11 +25,11 @@ export const useOperationStore = create((set, get) => ({
     set({ operation: data });
   },
   getOperations: async (categoryId = undefined) => {
-    const response = await operationsService.getOperations(categoryId);
+    const response = await getOperations(categoryId);
     set({ operations: response });
   },
   createOperation: async (operationData) => {
-    const res = await operationsService.createOperation(operationData);
+    const res = await createOperation(operationData);
     if (res.ok) {
       set({ message: "La operación fue agregada a la lista." });
       get().getOperations();
@@ -36,7 +41,7 @@ export const useOperationStore = create((set, get) => ({
     }
   },
   updateOperation: async (operationData) => {
-    let res = await operationsService.updateOperation(operationData);
+    let res = await updateOperation(operationData);
     if (res.ok) {
       set({ message: "La operación fue actualizada." });
       get().getOperations();
@@ -48,7 +53,7 @@ export const useOperationStore = create((set, get) => ({
     }
   },
   deleteOperation: async (id) => {
-    let res = await operationsService.deleteOperation(id);
+    let res = await deleteOperation(id);
     if (res.ok) {
       set({ message: "La operación fue eliminada." });
       get().getOperations();

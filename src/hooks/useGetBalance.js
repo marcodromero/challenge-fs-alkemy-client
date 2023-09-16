@@ -1,11 +1,11 @@
 import { useState } from "react";
-import service from "../services/balance";
+import { getBalance as serviceGetBalance } from "../services/balance";
 
 export const useGetBalance = () => {
   const [balance, setBalance] = useState([]);
 
   const getBalance = async () => {
-    const response = await service.getBalance();
+    const response = await serviceGetBalance();
     setBalance(response);
   };
 
