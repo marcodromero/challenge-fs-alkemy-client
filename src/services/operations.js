@@ -62,5 +62,5 @@ module.exports = {
   createOperation,
   updateOperation,
   deleteOperation,
-  setToken,
+  setTokenOperations: setToken,
 };

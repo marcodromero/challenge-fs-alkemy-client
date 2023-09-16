@@ -16,5 +16,5 @@ const getBalance = async () => {
 
 module.exports = {
   getBalance,
-  setToken,
+  setTokenBalance: setToken,
 };
