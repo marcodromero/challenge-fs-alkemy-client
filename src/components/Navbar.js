@@ -1,28 +1,8 @@
-import { useEffect } from "react";
 import { useAuthStore } from "../store/authStore";
 import { Link } from "wouter";
 
 export const Navbar = () => {
-  const { user, setIsAuthenticated } = useAuthStore();
-
-  const configButtonSignout = () => {
-    if (window.google) {
-      const google = window.google;
-      //button sign-out
-      const button = document.getElementById("google-signout");
-      button.addEventListener("click", () => {
-        google.accounts.id.disableAutoSelect();
-        google.accounts.id.revoke(user.email, (done) => {
-          localStorage.clear();
-          setIsAuthenticated(false);
-        });
-      });
-    }
-  };
-
-  useEffect(() => {
-    configButtonSignout();
-  }, []);
+  const { user, setIsAuthenticated, logout } = useAuthStore();
 
   return (
     <nav
@@ -31,8 +11,8 @@ export const Navbar = () => {
     >
       <div className="container-fluid">
         {/*navbar title*/}
-        <Link className="navbar-brand" href="/balance">
-          MY POCKET
+        <Link className="navbar-brand" href="/">
+          GASTOS E INGRESOS
         </Link>
 
         {/*responsive button */}
@@ -62,9 +42,9 @@ export const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <a href="#" id="google-signout" className="nav-link">
+              <Link href="/"  className="nav-link" onClick={logout}>
                 Salir
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

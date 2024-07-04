@@ -11,7 +11,6 @@ export const Modal = ({ title, id, children }) => {
     >
       <div className="modal-dialog modal-dialog-centered ">
         <div className="modal-content">
-          {/*title and close modal button*/}
           <div className="modal-header">
             <h5 className="modal-title" id="staticBackdropLabel">
               {title}
@@ -23,8 +22,6 @@ export const Modal = ({ title, id, children }) => {
               aria-label="Close"
             ></button>
           </div>
-
-          {/*form container*/}
           <div className="modal-body pb-5">{children}</div>
         </div>
       </div>

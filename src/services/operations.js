@@ -1,54 +1,48 @@
 const baseUrl = `${process.env.REACT_APP_SERVERIP}/operations`;
-let token = null;
 
-export const setTokenOperations = (newToken) => {
-  token = newToken;
-};
-
-export const getOperations = async (categoryId = undefined) => {
+export const getOperations = async ({categoryId = undefined, token}) => {
   if (categoryId) {
     const response = await fetch(`${baseUrl}?categoryId=${categoryId}`, {
       method: "GET",
       headers: { "x-token": token },
     });
-    return await response.json();
+    return response;
   }
   const response = await fetch(baseUrl, {
     method: "GET",
     headers: { "x-token": token },
   });
-  return await response.json();
+  return response;
 };
 
-export const getOperation = async ({ operationId }) => {
+export const getOperation = async ({ operationId , token}) => {
   const response = await fetch(baseUrl, {
     method: "GET",
     headers: { "x-token": token },
   });
-  return response.json();
+  return response;
 };
 
-export const createOperation = async (operationData) => {
+export const createOperation = async ({operationData, token}) => {
   const response = await fetch(baseUrl, {
     method: "POST",
     body: JSON.stringify(operationData),
     headers: { "Content-Type": "application/json", "x-token": token },
   });
-  console.log(response);
   return response;
 };
 
-export const updateOperation = async (updatedOperationData) => {
-  console.log("datos de update en servicio", updatedOperationData);
-  const response = await fetch(`${baseUrl}/${updatedOperationData.id}`, {
+export const updateOperation = async ({operationData, token}) => {
+  const {formattedDate:date, date:oldDate, ...data}= operationData;
+  const response = await fetch(`${baseUrl}/${operationData.id}`, {
     method: "PUT",
-    body: JSON.stringify(updatedOperationData),
+    body: JSON.stringify({...data, date}),
     headers: { "Content-Type": "application/json", "x-token": token },
   });
   return response;
 };
 
-export const deleteOperation = async (id) => {
+export const deleteOperation = async ({id, token}) => {
   const response = await fetch(`${baseUrl}/${id}`, {
     method: "DELETE",
     headers: { "x-token": token },

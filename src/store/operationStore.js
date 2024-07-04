@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { formatDate } from "../utils/formatDate";
+import { formatDate, formatDateToYMD } from "../utils/formatDate";
 import {
   getOperations,
   createOperation,
@@ -8,60 +8,74 @@ import {
 } from "../services/operations";
 
 export const useOperationStore = create((set, get) => ({
+  token:'',
   operation: null,
   operations: [],
   message: "",
   filled: false,
-  error: false,
+  isError: false,
+  setToken: (userToken)=>{
+     set({ token: userToken });
+  },
   resetStates: () => {
     set({ filled: false });
-    set({ error: false });
+    set({ isError: false });
     set({ message: "" });
   },
   setOperation: (operation) => {
     let { date, ...data } = operation;
-    const formattedDate = formatDate(date);
+    const formattedDate = formatDateToYMD(date);
     data = { ...data, date, formattedDate };
     set({ operation: data });
   },
   getOperations: async (categoryId = undefined) => {
-    const response = await getOperations(categoryId);
-    set({ operations: response });
+    const token =  get().token;
+    const response = await getOperations({categoryId, token});
+    const {data, error} = await response.json();
+    if(!error){
+        set({ operations: data });
+    }
   },
   createOperation: async (operationData) => {
-    const res = await createOperation(operationData);
-    if (res.ok) {
+    const token =  get().token;
+    const response = await createOperation({operationData, token});
+    const {error, message} = await response.json();
+    if(!error){
       set({ message: "La operación fue agregada a la lista." });
       get().getOperations();
       set({ filled: true });
-      set({ error: false });
+      set({ isError: false });
     } else {
-      set({ message: await res.json() });
-      set({ error: true });
+      set({ message: message});
+      set({ isError: true });
     }
   },
   updateOperation: async (operationData) => {
-    let res = await updateOperation(operationData);
-    if (res.ok) {
+    const token =  get().token;
+    let response = await updateOperation({operationData, token});
+    const {error, message} = await response.json();
+    if(!error){
       set({ message: "La operación fue actualizada." });
       get().getOperations();
       set({ filled: true });
-      set({ error: false });
+      set({ isError: false });
     } else {
-      set({ message: await res.json() });
-      set({ error: true });
+      set({ message: message });
+      set({ isError: true });
     }
   },
   deleteOperation: async (id) => {
-    let res = await deleteOperation(id);
-    if (res.ok) {
+    const token =  get().token;
+    let response = await deleteOperation({id, token});
+    const {data, error, message} = await response.json();
+    if(!error){
       set({ message: "La operación fue eliminada." });
       get().getOperations();
       set({ filled: true });
-      set({ error: false });
+      set({ isError: false });
     } else {
-      set({ message: await res.json() });
-      set({ error: true });
+      set({ message: message });
+      set({ isError: true });
     }
   },
 }));
